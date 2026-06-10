@@ -224,6 +224,10 @@ p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .grid.two {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -637,6 +641,23 @@ p {
   font-weight: 700;
 }
 
+.contact-primary-section {
+  padding-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+.contact-card {
+  margin: 0 auto;
+  max-width: 860px;
+  padding: clamp(1.65rem, 4vw, 2.6rem);
+  box-shadow: 0 24px 60px rgba(144, 26, 30, 0.13);
+}
+
+.contact-email {
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+  font-weight: 850;
+  padding: 0.78rem 1rem;
+}
+
 .footer {
   background: var(--primary);
   color: rgba(255, 255, 255, 0.78);
@@ -668,6 +689,7 @@ p {
     min-height: 660px;
   }
 
+  .grid.four,
   .grid.three,
   .grid.two,
   .glance-list,
