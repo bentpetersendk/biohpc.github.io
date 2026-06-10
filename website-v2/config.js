@@ -2,7 +2,7 @@ const siteConfig = {
   urls: {
     piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
     projectSpaceRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagKILRMZ6p0ek9Vc/form",
-    userRequestForm: "https://airtable.com/PLACEHOLDER_USER_REQUEST",
+    userRequestForm: "",
     documentation: "https://rubus.ku.dk/",
     support: "https://airtable.com/PLACEHOLDER_SUPPORT"
   },

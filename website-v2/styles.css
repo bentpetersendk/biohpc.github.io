@@ -187,6 +187,20 @@ p {
   border-color: #edcfd4;
 }
 
+.button.disabled,
+.button.disabled:hover {
+  background: var(--neutral-soft);
+  border-color: var(--line);
+  color: var(--muted);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.link-disabled {
+  color: var(--muted);
+  font-weight: 750;
+}
+
 .section {
   padding: clamp(3rem, 7vw, 5.5rem) 0;
 }
