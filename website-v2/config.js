@@ -1,14 +1,14 @@
 const siteConfig = {
   urls: {
     piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
-    projectSpaceRequestForm: "https://airtable.com/PLACEHOLDER_PROJECT_SPACE_REQUEST",
+    projectSpaceRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagKILRMZ6p0ek9Vc/form",
     userRequestForm: "https://airtable.com/PLACEHOLDER_USER_REQUEST",
     documentation: "https://rubus.ku.dk/",
     support: "https://airtable.com/PLACEHOLDER_SUPPORT"
   },
   contact: {
-    email: "support@biohpc.dk",
-    emailHref: "mailto:support@biohpc.dk",
+    email: "biohpc@ku.dk",
+    emailHref: "mailto:biohpc@ku.dk",
     phone: "",
     organization: "BioHPC, University of Copenhagen"
   },
