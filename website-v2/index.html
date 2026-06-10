@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BioHPC | Research Computing for Biological Sciences</title>
+    <meta name="description" content="BioHPC provides high-performance computing and research infrastructure for biological sciences at the University of Copenhagen." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="site-logo" href="index.html">BioHPC</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">Home</a>
+          <a href="getting-access.html">Getting Access</a>
+          <a href="project-spaces.html">Project Spaces</a>
+          <a href="documentation.html">Documentation</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-copy">
+          <p class="eyebrow">University of Copenhagen</p>
+          <h1>BioHPC</h1>
+          <p class="lead">High-performance computing and research infrastructure for biological sciences at the University of Copenhagen.</p>
+          <div class="actions">
+            <a class="button" data-href="urls.piRegistrationForm" href="#">Request Access</a>
+            <a class="button secondary" data-href="urls.projectSpaceRequestForm" href="#">Request Project Space</a>
+            <a class="button secondary" data-href="urls.documentation" href="#">Documentation</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-heading">
+            <h2>What BioHPC provides</h2>
+            <p class="lead">BioHPC combines compute, storage, software environments, and support for research groups working with biological data.</p>
+          </div>
+          <div class="grid three">
+            <article class="card"><h3>High-performance computing</h3><p>Shared compute resources for analyses that are too large for laptops or local workstations.</p></article>
+            <article class="card"><h3>Shared project storage</h3><p>Storage organized around research projects so teams can work from common data and results.</p></article>
+            <article class="card"><h3>Slurm job scheduling</h3><p>Queued batch jobs help researchers run repeatable workloads and make fair use of resources.</p></article>
+            <article class="card"><h3>Bioinformatics environments</h3><p>Software, modules, and workflow support for common life science computing needs.</p></article>
+            <article class="card"><h3>Research computing support</h3><p>Guidance for onboarding, job submission, data organization, and troubleshooting.</p></article>
+            <article class="card"><h3>Collaborative infrastructure</h3><p>Project Spaces bring users, storage, accounting, and approvals together under PI ownership.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Who can use BioHPC</h2>
+            <p class="lead">BioHPC supports biological research teams with a clear PI-owned structure for students, researchers, technical contacts, and approved collaborators.</p>
+          </div>
+          <div class="grid three">
+            <article class="card"><h3>Principal Investigators</h3><p>PIs own Project Spaces and remain responsible for membership, usage, and compliance.</p></article>
+            <article class="card"><h3>Research groups</h3><p>Groups can organize compute and data around shared scientific work.</p></article>
+            <article class="card"><h3>Students and researchers</h3><p>Postdocs, PhD students, and Master's students join approved Project Spaces.</p></article>
+            <article class="card"><h3>Bioinformaticians</h3><p>Technical users can support workflows and help teams use the infrastructure effectively.</p></article>
+            <article class="card"><h3>Technical Contacts</h3><p>Delegated contacts can help review requests and support day-to-day administration.</p></article>
+            <article class="card"><h3>Approved collaborators</h3><p>External collaborators may be added when the PI approves their participation.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-heading">
+            <h2>How BioHPC works</h2>
+            <p class="lead">Access follows the established Airtable-based onboarding workflow: PI registration, Project Space request, user request, approval, and provisioning.</p>
+          </div>
+          <div class="workflow" aria-label="BioHPC onboarding workflow">
+            <article class="step"><span class="number">1</span><div><h3>PI registration</h3><p>The PI registers so BioHPC can confirm eligibility and identify the responsible owner.</p></div></article>
+            <article class="step"><span class="number">2</span><div><h3>Project Space request</h3><p>The PI requests one or more Project Spaces for specific research activities.</p></div></article>
+            <article class="step"><span class="number">3</span><div><h3>User request</h3><p>Researchers request access to the relevant Project Space rather than joining BioHPC directly.</p></div></article>
+            <article class="step"><span class="number">4</span><div><h3>PI approval</h3><p>The PI or an authorized Technical Contact reviews and approves membership.</p></div></article>
+            <article class="step"><span class="number">5</span><div><h3>Access provisioned</h3><p>BioHPC provisions compute, storage, and login access for approved users.</p></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container grid two">
+          <div>
+            <h2>Project Spaces are the organizing unit</h2>
+            <p class="lead">Users join Project Spaces. Each Project Space groups the research environment, membership, accounting, and collaboration under PI responsibility.</p>
+            <div class="actions">
+              <a class="button" href="project-spaces.html">Explore Project Spaces</a>
+              <a class="button secondary" data-href="urls.userRequestForm" href="#">Request User Access</a>
+            </div>
+          </div>
+          <div class="model" aria-label="PI to Project Space to users model">
+            <div class="model-row">
+              <div class="model-box"><strong>PI</strong><br />Responsible owner</div>
+              <div class="model-box"><strong>Project Space A</strong><br />Storage, compute, users, accounting</div>
+              <div class="model-box"><strong>Users</strong><br />Researchers and collaborators</div>
+            </div>
+            <div class="model-row">
+              <div class="model-box"><strong>PI</strong><br />Responsible owner</div>
+              <div class="model-box"><strong>Project Space B</strong><br />Separate membership and usage</div>
+              <div class="model-box"><strong>Users</strong><br />A different project team</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; <span data-current-year></span> BioHPC, University of Copenhagen. <a href="contact.html">Contact BioHPC</a>.</p>
+      </div>
+    </footer>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
