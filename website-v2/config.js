@@ -3,7 +3,7 @@ const siteConfig = {
     piRegistrationForm: "https://airtable.com/PLACEHOLDER_PI_REGISTRATION",
     projectSpaceRequestForm: "https://airtable.com/PLACEHOLDER_PROJECT_SPACE_REQUEST",
     userRequestForm: "https://airtable.com/PLACEHOLDER_USER_REQUEST",
-    documentation: "https://airtable.com/PLACEHOLDER_DOCUMENTATION",
+    documentation: "https://rubus.ku.dk/",
     support: "https://airtable.com/PLACEHOLDER_SUPPORT"
   },
   contact: {
@@ -17,6 +17,6 @@ const siteConfig = {
     memoryAccounting: "Memory usage is tracked with job activity so resource use can be understood at project level.",
     resourceAllocation: "Project Spaces receive shared compute and storage allocations that can be reviewed as research needs change.",
     costRecovery: "BioHPC follows a cost-recovery model for sustainable operation of shared research infrastructure.",
-    note: "Replace these draft values with the current BioHPC accounting policy before public launch."
+    note: "Current pricing and resource usage details are maintained in the Rubus documentation."
   }
 };
