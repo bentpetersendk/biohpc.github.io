@@ -15,8 +15,8 @@ const siteConfig = {
   pricing: {
     cpuAccounting: "CPU usage is accounted per Project Space based on scheduled compute activity.",
     memoryAccounting: "Memory usage is tracked with job activity so resource use can be understood at project level.",
-    resourceAllocation: "Project Spaces receive shared compute and storage allocations that can be reviewed as research needs change.",
-    costRecovery: "BioHPC follows a cost-recovery model for sustainable operation of shared research infrastructure.",
+    resourceAllocation: "Project Spaces organize project storage, membership, accounting, and access to shared compute resources that can be reviewed as research needs change.",
+    costRecovery: "BioHPC follows a cost-recovery model for sustainable operation of shared research computing resources.",
     note: "Current pricing and resource usage details are maintained in the Rubus documentation."
   }
 };

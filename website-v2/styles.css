@@ -381,10 +381,173 @@ p {
   gap: 1rem;
 }
 
+.additional-info section {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.additional-info section + section {
+  margin-top: 1rem;
+}
+
+.sub-callout {
+  background: var(--blue-soft);
+  border: 1px solid #c8d8dd;
+  border-radius: 8px;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.sub-callout h3 {
+  font-size: 1rem;
+}
+
+.sub-callout p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
 .page-hero {
   background: var(--accent-soft);
   border-bottom: 1px solid var(--line);
   padding: clamp(3rem, 7vw, 5rem) 0;
+}
+
+.hero-onboarding {
+  align-items: center;
+}
+
+.hero-flow {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  justify-self: end;
+  max-width: 23rem;
+  padding: 1.25rem;
+  width: 100%;
+}
+
+.hero-flow div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem 0.85rem;
+  text-align: center;
+}
+
+.hero-flow strong {
+  font-weight: 750;
+}
+
+.hero-flow small {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.hero-flow span {
+  height: 1.3rem;
+  position: relative;
+}
+
+.hero-flow span::before {
+  background: var(--primary);
+  content: "";
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  width: 1px;
+}
+
+.hero-flow span::after {
+  border-bottom: 1px solid var(--primary);
+  border-right: 1px solid var(--primary);
+  bottom: 0.1rem;
+  content: "";
+  display: block;
+  height: 0.4rem;
+  left: calc(50% - 0.2rem);
+  position: absolute;
+  transform: rotate(45deg);
+  width: 0.4rem;
+}
+
+.hero-note {
+  color: var(--muted);
+  margin-top: 1rem;
+  max-width: 760px;
+}
+
+.project-map {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  justify-self: end;
+  max-width: 34rem;
+  padding: 1.25rem;
+  width: 100%;
+}
+
+.project-map-pi {
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  justify-self: center;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  width: min(100%, 18rem);
+}
+
+.project-map-branches {
+  border-inline: 1px solid #9eb4bc;
+  border-top: 1px solid #9eb4bc;
+  height: 2rem;
+  justify-self: center;
+  margin-top: 1rem;
+  width: 72%;
+}
+
+.project-map-branches::before {
+  background: #9eb4bc;
+  content: "";
+  display: block;
+  height: 1rem;
+  margin: -1rem auto 0;
+  width: 1px;
+}
+
+.project-map-spaces {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.project-map-spaces div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  text-align: center;
+}
+
+.project-map-spaces strong {
+  font-weight: 750;
+}
+
+.project-map-spaces span,
+.project-map-spaces em {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.project-map-spaces em {
+  border-top: 1px solid var(--line);
+  font-style: normal;
+  padding-top: 0.45rem;
 }
 
 .plain-list {
@@ -428,6 +591,24 @@ p {
   padding: 0.7rem;
 }
 
+.email-link {
+  align-items: center;
+  background: var(--accent-soft);
+  border: 1px solid #e3c8b3;
+  border-radius: 8px;
+  display: inline-flex;
+  font-weight: 750;
+  gap: 0.45rem;
+  padding: 0.62rem 0.8rem;
+  text-decoration: none;
+}
+
+.email-link::before {
+  content: "Email";
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .footer {
   background: var(--primary);
   color: rgba(255, 255, 255, 0.78);
@@ -463,8 +644,32 @@ p {
   .grid.two,
   .glance-list,
   .model-projects,
+  .project-map-spaces,
   .model-row {
     grid-template-columns: 1fr;
+  }
+
+  .hero-flow {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .project-map {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .project-map-branches {
+    border-left: 1px solid #9eb4bc;
+    border-right: 0;
+    border-top: 0;
+    height: 1rem;
+    margin-top: 0.75rem;
+    width: 1px;
+  }
+
+  .project-map-branches::before {
+    display: none;
   }
 
   .model-branches {
