@@ -228,6 +228,28 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.glance-list {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.glance-list div {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  font-weight: 750;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+}
+
+.glance-list span {
+  color: var(--primary);
+  font-weight: 900;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -279,6 +301,55 @@ p {
   display: grid;
   gap: 1rem;
   padding: 1.25rem;
+}
+
+.org-chart {
+  gap: 0;
+  justify-items: center;
+}
+
+.model-pi {
+  border-color: var(--primary);
+  max-width: 18rem;
+  text-align: center;
+}
+
+.model-branches {
+  border-top: 1px solid #9eb4bc;
+  border-inline: 1px solid #9eb4bc;
+  height: 2rem;
+  margin-top: 1rem;
+  width: 70%;
+}
+
+.model-branches::before {
+  background: #9eb4bc;
+  content: "";
+  display: block;
+  height: 1rem;
+  margin: -1rem auto 0;
+  width: 1px;
+}
+
+.model-projects {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+}
+
+.model-project {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.model-project span,
+.model-project em {
+  color: var(--muted);
+}
+
+.model-project em {
+  font-style: normal;
 }
 
 .model-row {
@@ -352,6 +423,10 @@ p {
   color: #fff;
 }
 
+.footer p {
+  margin-bottom: 0.5rem;
+}
+
 @media (max-width: 860px) {
   .header-inner {
     align-items: flex-start;
@@ -371,8 +446,23 @@ p {
 
   .grid.three,
   .grid.two,
+  .glance-list,
+  .model-projects,
   .model-row {
     grid-template-columns: 1fr;
+  }
+
+  .model-branches {
+    border-left: 1px solid #9eb4bc;
+    border-right: 0;
+    border-top: 0;
+    height: 1rem;
+    margin-top: 0.75rem;
+    width: 1px;
+  }
+
+  .model-branches::before {
+    display: none;
   }
 }
 
