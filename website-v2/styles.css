@@ -376,6 +376,11 @@ p {
   margin-top: 1rem;
 }
 
+.info-stack {
+  display: grid;
+  gap: 1rem;
+}
+
 .page-hero {
   background: var(--accent-soft);
   border-bottom: 1px solid var(--line);
@@ -411,6 +416,16 @@ p {
 
 .resource-table tr:last-child td {
   border-bottom: 0;
+}
+
+.form-table {
+  box-shadow: none;
+  font-size: 0.94rem;
+}
+
+.form-table th,
+.form-table td {
+  padding: 0.7rem;
 }
 
 .footer {
