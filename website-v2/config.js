@@ -1,6 +1,6 @@
 const siteConfig = {
   urls: {
-    piRegistrationForm: "https://airtable.com/PLACEHOLDER_PI_REGISTRATION",
+    piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
     projectSpaceRequestForm: "https://airtable.com/PLACEHOLDER_PROJECT_SPACE_REQUEST",
     userRequestForm: "https://airtable.com/PLACEHOLDER_USER_REQUEST",
     documentation: "https://rubus.ku.dk/",
