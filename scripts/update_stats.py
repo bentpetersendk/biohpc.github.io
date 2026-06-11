@@ -38,36 +38,36 @@ METRICS: tuple[Metric, ...] = (
         "approved",
         "Users",
         "AIRTABLE_APPROVED_USERS_FORMULA",
-        'LOWER({Status}) = "approved"',
+        'LOWER({Account Status}) = "active"',
     ),
     Metric(
         "users",
         "pending_requests",
         "User Access Requests",
         "AIRTABLE_PENDING_USER_REQUESTS_FORMULA",
-        'LOWER({Status}) = "pending"',
+        'LOWER({Status}) = "pending pi approval"',
     ),
-    Metric("pis", "registered", "PI"),
+    Metric("pis", "registered", "PIs"),
     Metric(
         "pis",
         "approved",
-        "PI",
+        "PIs",
         "AIRTABLE_APPROVED_PIS_FORMULA",
-        'LOWER({Status}) = "approved"',
+        'LOWER({PI Registration Status}) = "approved"',
     ),
     Metric(
         "pis",
         "pending_requests",
         "PI Approval Requests",
         "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
-        'LOWER({Status}) = "pending"',
+        "{PI Approval Decision} = BLANK()",
     ),
     Metric(
         "projects",
         "active",
         "Projects",
         "AIRTABLE_ACTIVE_PROJECTS_FORMULA",
-        'LOWER({Status}) = "active"',
+        'LOWER({Project Status}) = "active"',
     ),
     Metric("research_groups", "total", "Research Groups"),
 )
@@ -127,8 +127,8 @@ def fetch_table_count(
 
         if response.status_code != 200:
             raise AirtableError(
-                f"Airtable API returned HTTP {response.status_code} for table '{table_name}'. "
-                "Check that the table exists and the token has access."
+                f"Airtable API returned HTTP {response.status_code} for table '{table_name}': "
+                f"{response.text}"
             )
 
         try:

@@ -11,7 +11,7 @@ The production site reads public statistics from `stats.json` in the repository 
 Website statistics are calculated directly from the operational Airtable source tables:
 
 - `Users`
-- `PI`
+- `PIs`
 - `Research Groups`
 - `Projects`
 - `User Access Requests`
@@ -38,7 +38,13 @@ Optional repository variables can override the default Airtable `filterByFormula
 - `AIRTABLE_PENDING_PI_REQUESTS_FORMULA`
 - `AIRTABLE_ACTIVE_PROJECTS_FORMULA`
 
-The defaults use `LOWER({Status})` and expect status values such as `approved`, `pending`, and `active`.
+The defaults use the current BioHPC Airtable schema:
+
+- approved users: `LOWER({Account Status}) = "active"`
+- pending user requests: `LOWER({Status}) = "pending pi approval"`
+- approved PIs: `LOWER({PI Registration Status}) = "approved"`
+- pending PI requests: `{PI Approval Decision} = BLANK()`
+- active projects: `LOWER({Project Status}) = "active"`
 
 ### Manual Workflow Trigger
 
