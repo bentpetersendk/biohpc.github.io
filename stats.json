@@ -1,0 +1,19 @@
+{
+  "updated": "2026-06-11T14:15:41+00:00",
+  "users": {
+    "registered": 1,
+    "approved": 0,
+    "pending_requests": 1
+  },
+  "pis": {
+    "registered": 19,
+    "approved": 0,
+    "pending_requests": 0
+  },
+  "projects": {
+    "active": 0
+  },
+  "research_groups": {
+    "total": 70
+  }
+}
