@@ -1,8 +1,8 @@
 {
-  "updated": "2026-06-11T14:40:08+00:00",
+  "updated": "2026-06-11T21:05:30+00:00",
   "users": {
-    "registered": 1,
-    "approved": 0,
+    "registered": 2,
+    "approved": 1,
     "pending_requests": 1
   },
   "pis": {
