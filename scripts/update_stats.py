@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +19,8 @@ import requests
 
 AIRTABLE_API_ROOT = "https://api.airtable.com/v0"
 REQUEST_TIMEOUT = 30
+MAX_REQUEST_ATTEMPTS = 5
+RETRY_BACKOFF_SECONDS = (2, 4, 8, 16)
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATS_PATH = REPO_ROOT / "stats.json"
 
@@ -113,6 +116,53 @@ def require_env(name: str) -> str:
     return value
 
 
+def is_retryable_response(response: requests.Response) -> bool:
+    return response.status_code == 429 or 500 <= response.status_code <= 599
+
+
+def warn_retry(table_name: str, attempt: int, delay: int, reason: str) -> None:
+    print(
+        f"Warning: Airtable request for table '{table_name}' failed on attempt "
+        f"{attempt}/{MAX_REQUEST_ATTEMPTS}: {reason}. Retrying in {delay}s.",
+        file=sys.stderr,
+    )
+
+
+def get_airtable_page(
+    session: requests.Session,
+    url: str,
+    params: dict[str, str | int],
+    table_name: str,
+) -> requests.Response:
+    for attempt in range(1, MAX_REQUEST_ATTEMPTS + 1):
+        try:
+            response = session.get(url, params=params, timeout=REQUEST_TIMEOUT)
+        except requests.RequestException as exc:
+            if attempt == MAX_REQUEST_ATTEMPTS:
+                raise AirtableError(f"Failed to fetch Airtable table '{table_name}': {exc}") from exc
+
+            delay = RETRY_BACKOFF_SECONDS[attempt - 1]
+            warn_retry(table_name, attempt, delay, str(exc))
+            time.sleep(delay)
+            continue
+
+        if response.status_code == 200:
+            return response
+
+        if is_retryable_response(response) and attempt < MAX_REQUEST_ATTEMPTS:
+            delay = RETRY_BACKOFF_SECONDS[attempt - 1]
+            warn_retry(table_name, attempt, delay, f"HTTP {response.status_code}")
+            time.sleep(delay)
+            continue
+
+        raise AirtableError(
+            f"Airtable API returned HTTP {response.status_code} for table '{table_name}': "
+            f"{response.text}"
+        )
+
+    raise AirtableError(f"Failed to fetch Airtable table '{table_name}' after {MAX_REQUEST_ATTEMPTS} attempts.")
+
+
 def fetch_table_count(
     session: requests.Session,
     base_id: str,
@@ -130,16 +180,7 @@ def fetch_table_count(
 
     count = 0
     while True:
-        try:
-            response = session.get(url, params=params, timeout=REQUEST_TIMEOUT)
-        except requests.RequestException as exc:
-            raise AirtableError(f"Failed to fetch Airtable table '{table_name}': {exc}") from exc
-
-        if response.status_code != 200:
-            raise AirtableError(
-                f"Airtable API returned HTTP {response.status_code} for table '{table_name}': "
-                f"{response.text}"
-            )
+        response = get_airtable_page(session, url, params, table_name)
 
         try:
             payload: dict[str, Any] = response.json()
