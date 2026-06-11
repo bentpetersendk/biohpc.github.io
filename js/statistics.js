@@ -9,6 +9,11 @@
   const META_KEY_PATTERN = /(updated|created|generated|timestamp|source|status|schema|version|metadata|meta)$/i;
   const TIME_KEY_PATTERN = /(date|time|month|week|year|period|updated|created|generated)/i;
   const ACTIVITY_KEY_PATTERN = /(activity|event|events|log|audit|recent|history)/i;
+  const PUBLIC_METRICS = [
+    { key: "pis.registered", label: "Principal Investigators" },
+    { key: "projects.active", label: "Project Spaces" },
+    { key: "users.registered", label: "Users" },
+  ];
 
   document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("statistics-content")) {
@@ -84,7 +89,7 @@
     grid.replaceChildren();
 
     if (!metrics.length) {
-      grid.appendChild(createMessage("No top-level numeric metrics were found in stats.json."));
+      grid.appendChild(createMessage("No public statistics were found in stats.json."));
       return;
     }
 
@@ -97,7 +102,7 @@
       value.textContent = formatValue(metric.value, metric.key);
 
       const label = document.createElement("h3");
-      label.textContent = labelize(metric.key);
+      label.textContent = metric.label;
 
       const trend = detectTrend(data, metric.key);
       if (trend) {
@@ -114,17 +119,16 @@
   }
 
   function getTopLevelMetrics(data) {
-    const metrics = [];
+    return PUBLIC_METRICS
+      .map((metric) => ({
+        ...metric,
+        value: getNestedValue(data, metric.key),
+      }))
+      .filter((metric) => Number.isFinite(metric.value));
+  }
 
-    walk(data, (value, path) => {
-      if (!Number.isFinite(value) || path.some((key) => META_KEY_PATTERN.test(key))) return;
-      metrics.push({
-        key: path.join("."),
-        value,
-      });
-    });
-
-    return metrics.sort((a, b) => a.key.localeCompare(b.key));
+  function getNestedValue(value, path) {
+    return path.split(".").reduce((current, key) => current && current[key], value);
   }
 
   function detectTrend(data, metricKey) {
