@@ -62,6 +62,14 @@ METRICS: tuple[Metric, ...] = (
         "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
         "{PI Approval Decision} = BLANK()",
     ),
+    Metric("projects", "total", "Projects"),
+    Metric(
+        "projects",
+        "ordered",
+        "Projects",
+        "AIRTABLE_ORDERED_PROJECTS_FORMULA",
+        'LOWER({Project Status}) = "ordered"',
+    ),
     Metric(
         "projects",
         "active",
@@ -84,6 +92,8 @@ STATS_TEMPLATE: dict[str, Any] = {
         "pending_requests": 0,
     },
     "projects": {
+        "total": 0,
+        "ordered": 0,
         "active": 0,
     },
     "research_groups": {

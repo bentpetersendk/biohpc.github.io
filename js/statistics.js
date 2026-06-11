@@ -11,8 +11,10 @@
   const ACTIVITY_KEY_PATTERN = /(activity|event|events|log|audit|recent|history)/i;
   const PUBLIC_METRICS = [
     { key: "pis.registered", label: "Principal Investigators" },
-    { key: "projects.active", label: "Project Spaces" },
     { key: "users.registered", label: "Users" },
+    { key: "projects.total", label: "Total Project Spaces" },
+    { key: "projects.ordered", label: "Ordered Project Spaces" },
+    { key: "projects.active", label: "Active Project Spaces" },
   ];
 
   document.addEventListener("DOMContentLoaded", () => {

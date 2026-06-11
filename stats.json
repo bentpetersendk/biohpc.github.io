@@ -11,6 +11,8 @@
     "pending_requests": 0
   },
   "projects": {
+    "total": 0,
+    "ordered": 0,
     "active": 0
   },
   "research_groups": {

@@ -48,7 +48,7 @@ function loadWebsiteStats() {
     })
     .then((stats) => {
       updateTextById("registered-pis-stat", getNestedValue(stats, "pis.registered"));
-      updateTextById("project-spaces-stat", getNestedValue(stats, "projects.active"));
+      updateTextById("project-spaces-stat", getNestedValue(stats, "projects.total"));
       updateTextById("users-stat", getNestedValue(stats, "users.registered"));
     })
     .catch(() => {

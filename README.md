@@ -37,6 +37,7 @@ Optional repository variables can override the default Airtable `filterByFormula
 - `AIRTABLE_APPROVED_PIS_FORMULA`
 - `AIRTABLE_PENDING_PI_REQUESTS_FORMULA`
 - `AIRTABLE_ACTIVE_PROJECTS_FORMULA`
+- `AIRTABLE_ORDERED_PROJECTS_FORMULA`
 
 The defaults use the current BioHPC Airtable schema:
 
@@ -45,6 +46,7 @@ The defaults use the current BioHPC Airtable schema:
 - approved PIs: `LOWER({PI Registration Status}) = "approved"`
 - pending PI requests: `{PI Approval Decision} = BLANK()`
 - active projects: `LOWER({Project Status}) = "active"`
+- ordered projects: `LOWER({Project Status}) = "ordered"`
 
 ### Manual Workflow Trigger
 
