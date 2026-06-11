@@ -13,7 +13,7 @@
     { key: "pis.registered", label: "Principal Investigators" },
     { key: "users.registered", label: "Users" },
     { key: "projects.total", label: "Total Project Spaces" },
-    { key: "projects.ordered", label: "Ordered Project Spaces" },
+    { key: "projects.ordered", label: "Projects in Onboarding" },
     { key: "projects.active", label: "Active Project Spaces" },
   ];
 
@@ -373,12 +373,9 @@
     const status = data ? "Available" : "Unavailable";
     const updated = data ? findFirstValue(data, /(last.*update|updated|updated_at|timestamp|generated_at|generated)/i) : null;
     const generationTime = data ? findFirstValue(data, /(generation.*time|generated.*in|duration|runtime|elapsed)/i) : null;
-    const records = data ? countRecords(data) : 0;
-
     target.replaceChildren(
       createStatusCard("Data source status", error ? "Fetch failed" : status),
       createStatusCard("Last update", updated ? formatDateTime(updated) : "Not provided"),
-      createStatusCard("Records loaded", formatNumber(records)),
       createStatusCard("Statistics generation time", generationTime ? formatCell(generationTime, "generation_time") : "Not provided")
     );
   }
