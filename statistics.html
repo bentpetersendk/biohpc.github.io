@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistics | BioHPC</title>
+    <meta name="description" content="BioHPC operational statistics dashboard for Department of Biology employee projects, employee access, storage, compute usage, and activity." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header"><div class="container header-inner"><a class="site-logo" href="index.html">BioHPC</a><nav class="site-nav" aria-label="Primary navigation"><a href="index.html">Home</a><a href="getting-access.html">Getting Access</a><a href="project-spaces.html">Project Spaces</a><a href="documentation.html">Documentation</a><a href="pricing.html">Pricing</a><a href="statistics.html">Statistics</a><a href="contact.html">Contact</a></nav></div></header>
+    <main>
+      <section class="page-hero statistics-hero">
+        <div class="container grid two hero-onboarding">
+          <div>
+            <p class="eyebrow">Operations dashboard</p>
+            <h1>Statistics</h1>
+            <p class="lead">Live BioHPC statistics exported from Airtable, showing Department of Biology employee service growth, project activity, employee access, storage, compute usage, and operational status when those data are available.</p>
+          </div>
+          <div class="header-art dashboard-art" aria-hidden="true">
+            <div><strong>BioHPC telemetry</strong><span>Projects</span><span>Employees</span><span>Storage</span><span>Compute</span></div>
+            <div class="dashboard-bars"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section statistics-dashboard" aria-live="polite">
+        <div class="container">
+          <div id="statistics-loading" class="dashboard-message">Loading statistics...</div>
+          <div id="statistics-error" class="dashboard-message error" hidden></div>
+          <div id="statistics-empty" class="dashboard-message" hidden>No statistics are available yet.</div>
+
+          <div id="statistics-content" hidden>
+            <section class="dashboard-block" aria-labelledby="statistics-overview-heading">
+              <div class="section-heading">
+                <h2 id="statistics-overview-heading">Overview</h2>
+                <p class="lead">Current top-level metrics detected in the statistics export.</p>
+              </div>
+              <div id="metrics-grid" class="dashboard-metrics"></div>
+            </section>
+
+            <section id="charts-section" class="dashboard-block" aria-labelledby="statistics-charts-heading" hidden>
+              <div class="section-heading">
+                <h2 id="statistics-charts-heading">Trends</h2>
+                <p class="lead">Time-series datasets detected automatically from the statistics export.</p>
+              </div>
+              <div id="charts-grid" class="dashboard-charts"></div>
+            </section>
+
+            <section id="tables-section" class="dashboard-block" aria-labelledby="statistics-tables-heading" hidden>
+              <div class="section-heading">
+                <h2 id="statistics-tables-heading">Tables</h2>
+                <p class="lead">Tabular datasets detected from Airtable export records.</p>
+              </div>
+              <div id="tables-grid" class="dashboard-tables"></div>
+            </section>
+
+            <section id="activity-section" class="dashboard-block" aria-labelledby="statistics-activity-heading" hidden>
+              <div class="section-heading">
+                <h2 id="statistics-activity-heading">Recent Activity</h2>
+                <p class="lead">Activity-style records detected in the export.</p>
+              </div>
+              <div id="activity-table"></div>
+            </section>
+
+            <section class="dashboard-block" aria-labelledby="statistics-status-heading">
+              <div class="section-heading">
+                <h2 id="statistics-status-heading">System Status</h2>
+              </div>
+              <div id="system-status" class="status-grid"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><div class="container"><p>&copy; <span data-current-year></span> BioHPC, University of Copenhagen.</p><p>BioHPC is a Department of Biology initiative at the University of Copenhagen and utilizes the <a href="https://rubus.ku.dk/" target="_blank" rel="noopener noreferrer">Rubus HPC platform at the University of Copenhagen</a>.</p></div></footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="config.js"></script><script src="script.js"></script><script src="js/statistics.js"></script>
+  </body>
+</html>
