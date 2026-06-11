@@ -42,11 +42,11 @@
       renderCharts(state.charts);
       renderTables(state.tables, state.activity);
       renderRecentActivity(state.activity);
-      renderSystemStatus(data);
+      renderStatisticsInfo(data);
       showContent(hasRenderableData(data));
     } catch (error) {
       showError("Statistics could not be loaded. Please try again later.");
-      renderSystemStatus(null, error);
+      renderStatisticsInfo(null);
     }
   }
 
@@ -366,29 +366,12 @@
     });
   }
 
-  function renderSystemStatus(data, error) {
-    const target = document.getElementById("system-status");
+  function renderStatisticsInfo(data) {
+    const target = document.getElementById("statistics-last-update");
     if (!target) return;
 
-    const status = data ? "Available" : "Unavailable";
     const updated = data ? findFirstValue(data, /(last.*update|updated|updated_at|timestamp|generated_at|generated)/i) : null;
-    const generationTime = data ? findFirstValue(data, /(generation.*time|generated.*in|duration|runtime|elapsed)/i) : null;
-    target.replaceChildren(
-      createStatusCard("Data source status", error ? "Fetch failed" : status),
-      createStatusCard("Last update", updated ? formatDateTime(updated) : "Not provided"),
-      createStatusCard("Statistics generation time", generationTime ? formatCell(generationTime, "generation_time") : "Not provided")
-    );
-  }
-
-  function createStatusCard(label, value) {
-    const card = document.createElement("article");
-    card.className = "status-card";
-    const title = document.createElement("h3");
-    title.textContent = label;
-    const body = document.createElement("p");
-    body.textContent = value;
-    card.append(title, body);
-    return card;
+    target.textContent = updated ? formatDateTime(updated) : "Not available";
   }
 
   function createMessage(message) {
