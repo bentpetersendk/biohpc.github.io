@@ -10,7 +10,7 @@
   const TIME_KEY_PATTERN = /(date|time|month|week|year|period|updated|created|generated)/i;
   const ACTIVITY_KEY_PATTERN = /(activity|event|events|log|audit|recent|history)/i;
   const PUBLIC_METRICS = [
-    { key: "pis.registered", label: "Principal Investigators" },
+    { key: "pis.registered", label: "Registered Principal Investigators" },
     { key: "users.registered", label: "Users" },
     { key: "projects.total", label: "Total Project Spaces" },
     { key: "projects.ordered", label: "Projects in Onboarding" },
