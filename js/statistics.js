@@ -114,25 +114,36 @@
   }
 
   function getTopLevelMetrics(data) {
-    return Object.entries(data)
-      .filter(([key, value]) => Number.isFinite(value) && !META_KEY_PATTERN.test(key))
-      .map(([key, value]) => ({ key, value }))
-      .sort((a, b) => a.key.localeCompare(b.key));
+    const metrics = [];
+
+    walk(data, (value, path) => {
+      if (!Number.isFinite(value) || path.some((key) => META_KEY_PATTERN.test(key))) return;
+      metrics.push({
+        key: path.join("."),
+        value,
+      });
+    });
+
+    return metrics.sort((a, b) => a.key.localeCompare(b.key));
   }
 
   function detectTrend(data, metricKey) {
-    const candidates = [
-      `${metricKey}_previous`,
-      `previous_${metricKey}`,
-      `${metricKey}_last`,
-      `last_${metricKey}`,
-    ];
-    const previousKey = candidates.find((key) => Number.isFinite(data[key]));
+    const path = metricKey.split(".");
+    const metricName = path[path.length - 1];
+    const parent = path.slice(0, -1).reduce((current, key) => current && current[key], data);
+    if (!parent || typeof parent !== "object") return null;
+
+    const previousKey = [
+      `${metricName}_previous`,
+      `previous_${metricName}`,
+      `${metricName}_last`,
+      `last_${metricName}`,
+    ].find((key) => Number.isFinite(parent[key]));
     if (!previousKey) return null;
 
     return {
-      change: data[metricKey] - data[previousKey],
-      direction: data[metricKey] - data[previousKey],
+      change: parent[metricName] - parent[previousKey],
+      direction: parent[metricName] - parent[previousKey],
     };
   }
 
@@ -502,6 +513,7 @@
 
   function labelize(value) {
     return String(value)
+      .replace(/\./g, " ")
       .replace(/[_-]+/g, " ")
       .replace(/([a-z])([A-Z])/g, "$1 $2")
       .replace(/\s+/g, " ")

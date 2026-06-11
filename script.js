@@ -29,6 +29,10 @@ function updateTextById(id, value) {
   }
 }
 
+function getNestedValue(value, path) {
+  return path.split(".").reduce((current, key) => current && current[key], value);
+}
+
 function loadWebsiteStats() {
   const statElements = [
     "registered-pis-stat",
@@ -43,9 +47,9 @@ function loadWebsiteStats() {
       return response.json();
     })
     .then((stats) => {
-      updateTextById("registered-pis-stat", stats.registered_pis);
-      updateTextById("project-spaces-stat", stats.project_spaces);
-      updateTextById("users-stat", stats.users);
+      updateTextById("registered-pis-stat", getNestedValue(stats, "pis.registered"));
+      updateTextById("project-spaces-stat", getNestedValue(stats, "projects.active"));
+      updateTextById("users-stat", getNestedValue(stats, "users.registered"));
     })
     .catch(() => {
       statElements.forEach((id) => {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate public website statistics from Airtable."""
+"""Generate public website statistics from Airtable source tables."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import tempfile
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -15,16 +16,80 @@ from urllib.parse import quote
 import requests
 
 
-METRICS = {
-    "registered_pis": "PI",
-    "project_spaces": "Project Spaces",
-    "users": "Users",
-}
-
 AIRTABLE_API_ROOT = "https://api.airtable.com/v0"
 REQUEST_TIMEOUT = 30
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATS_PATH = REPO_ROOT / "stats.json"
+
+
+@dataclass(frozen=True)
+class Metric:
+    section: str
+    key: str
+    table: str
+    formula_env: str | None = None
+    default_formula: str | None = None
+
+
+METRICS: tuple[Metric, ...] = (
+    Metric("users", "registered", "Users"),
+    Metric(
+        "users",
+        "approved",
+        "Users",
+        "AIRTABLE_APPROVED_USERS_FORMULA",
+        'LOWER({Status}) = "approved"',
+    ),
+    Metric(
+        "users",
+        "pending_requests",
+        "User Access Requests",
+        "AIRTABLE_PENDING_USER_REQUESTS_FORMULA",
+        'LOWER({Status}) = "pending"',
+    ),
+    Metric("pis", "registered", "PI"),
+    Metric(
+        "pis",
+        "approved",
+        "PI",
+        "AIRTABLE_APPROVED_PIS_FORMULA",
+        'LOWER({Status}) = "approved"',
+    ),
+    Metric(
+        "pis",
+        "pending_requests",
+        "PI Approval Requests",
+        "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
+        'LOWER({Status}) = "pending"',
+    ),
+    Metric(
+        "projects",
+        "active",
+        "Projects",
+        "AIRTABLE_ACTIVE_PROJECTS_FORMULA",
+        'LOWER({Status}) = "active"',
+    ),
+    Metric("research_groups", "total", "Research Groups"),
+)
+
+STATS_TEMPLATE: dict[str, Any] = {
+    "users": {
+        "registered": 0,
+        "approved": 0,
+        "pending_requests": 0,
+    },
+    "pis": {
+        "registered": 0,
+        "approved": 0,
+        "pending_requests": 0,
+    },
+    "projects": {
+        "active": 0,
+    },
+    "research_groups": {
+        "total": 0,
+    },
+}
 
 
 class AirtableError(RuntimeError):
@@ -43,12 +108,15 @@ def fetch_table_count(
     base_id: str,
     table_name: str,
     view_name: str | None = None,
+    filter_formula: str | None = None,
 ) -> int:
     encoded_table = quote(table_name, safe="")
     url = f"{AIRTABLE_API_ROOT}/{base_id}/{encoded_table}"
     params: dict[str, str | int] = {"pageSize": 100}
     if view_name:
         params["view"] = view_name
+    if filter_formula:
+        params["filterByFormula"] = filter_formula
 
     count = 0
     while True:
@@ -82,7 +150,7 @@ def fetch_table_count(
 
 def write_json_atomically(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    serialized = json.dumps(data, indent=2, sort_keys=True) + "\n"
+    serialized = json.dumps(data, indent=2) + "\n"
     tmp_path: Path | None = None
 
     try:
@@ -119,7 +187,26 @@ def metrics_are_unchanged(new_stats: dict[str, Any], existing_stats: dict[str, A
     if not existing_stats:
         return False
 
-    return all(existing_stats.get(metric_name) == new_stats.get(metric_name) for metric_name in METRICS)
+    return strip_updated(existing_stats) == strip_updated(new_stats)
+
+
+def strip_updated(stats: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in stats.items() if key != "updated"}
+
+
+def get_metric_formula(metric: Metric) -> str | None:
+    if not metric.formula_env:
+        return None
+
+    formula = os.environ.get(metric.formula_env, "").strip()
+    if formula:
+        return formula
+
+    return metric.default_formula
+
+
+def empty_stats() -> dict[str, Any]:
+    return json.loads(json.dumps(STATS_TEMPLATE))
 
 
 def build_stats() -> dict[str, Any]:
@@ -130,17 +217,23 @@ def build_stats() -> dict[str, Any]:
     session = requests.Session()
     session.headers.update({"Authorization": f"Bearer {token}"})
 
-    stats: dict[str, Any] = {}
-    for metric_name, table_name in METRICS.items():
-        stats[metric_name] = fetch_table_count(session, base_id, table_name, view_name)
+    stats = empty_stats()
+    for metric in METRICS:
+        stats[metric.section][metric.key] = fetch_table_count(
+            session,
+            base_id,
+            metric.table,
+            view_name,
+            get_metric_formula(metric),
+        )
 
     existing_stats = read_existing_stats(STATS_PATH)
     if metrics_are_unchanged(stats, existing_stats) and existing_stats.get("updated"):
-        stats["updated"] = existing_stats.get("updated")
+        updated = existing_stats.get("updated")
     else:
-        stats["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
-    return stats
+    return {"updated": updated, **stats}
 
 
 def main() -> int:
