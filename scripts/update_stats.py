@@ -180,30 +180,6 @@ def write_json_atomically(path: Path, data: dict[str, Any]) -> None:
         raise
 
 
-def read_existing_stats(path: Path) -> dict[str, Any] | None:
-    if not path.exists():
-        return None
-
-    try:
-        with path.open("r", encoding="utf-8") as stats_file:
-            payload = json.load(stats_file)
-    except (OSError, ValueError):
-        return None
-
-    return payload if isinstance(payload, dict) else None
-
-
-def metrics_are_unchanged(new_stats: dict[str, Any], existing_stats: dict[str, Any] | None) -> bool:
-    if not existing_stats:
-        return False
-
-    return strip_updated(existing_stats) == strip_updated(new_stats)
-
-
-def strip_updated(stats: dict[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in stats.items() if key != "updated"}
-
-
 def get_metric_formula(metric: Metric) -> str | None:
     if not metric.formula_env:
         return None
@@ -237,12 +213,7 @@ def build_stats() -> dict[str, Any]:
             get_metric_formula(metric),
         )
 
-    existing_stats = read_existing_stats(STATS_PATH)
-    if metrics_are_unchanged(stats, existing_stats) and existing_stats.get("updated"):
-        updated = existing_stats.get("updated")
-    else:
-        updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
-
+    updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return {"updated": updated, **stats}
 
 
