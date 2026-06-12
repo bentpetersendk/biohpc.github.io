@@ -244,6 +244,13 @@ def get_output_path() -> Path:
     return output_path
 
 
+def get_display_path(path: Path) -> Path:
+    try:
+        return path.relative_to(REPO_ROOT)
+    except ValueError:
+        return path
+
+
 def build_stats() -> dict[str, Any]:
     token = require_env("AIRTABLE_TOKEN")
     base_id = require_env("AIRTABLE_BASE_ID")
@@ -275,7 +282,7 @@ def main() -> int:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    print(f"Wrote {output_path.relative_to(REPO_ROOT)}")
+    print(f"Wrote {get_display_path(output_path)}")
     return 0
 
 
