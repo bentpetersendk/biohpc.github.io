@@ -46,9 +46,9 @@ METRICS: tuple[Metric, ...] = (
     Metric(
         "users",
         "pending_requests",
-        "User Access Requests",
+        "Users",
         "AIRTABLE_PENDING_USER_REQUESTS_FORMULA",
-        'LOWER({Status}) = "pending pi approval"',
+        'LOWER({Account Status}) = "pending pi approval"',
     ),
     Metric("pis", "registered", "PIs"),
     Metric(
