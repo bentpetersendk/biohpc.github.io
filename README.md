@@ -29,6 +29,7 @@ Add these repository secrets in GitHub under **Settings > Secrets and variables 
 Optional:
 
 - `AIRTABLE_VIEW` - Airtable view name to use when counting records. If omitted, all records in each table are counted.
+- `BIOHPC_STATS_OUTPUT_PATH` - output path for the generated JSON. Defaults to `stats.json` in the repository root. Relative paths are resolved from the repository root.
 
 Optional repository variables can override the default Airtable `filterByFormula` expressions:
 
@@ -61,7 +62,7 @@ The workflow also runs automatically once per hour.
 
 ### Generated File
 
-The workflow writes `stats.json` in the repository root. The website fetches `./stats.json` in browser JavaScript and does not contain Airtable credentials.
+The workflow installs Python dependencies from `requirements.txt` and writes `stats.json` in the repository root. The website fetches `./stats.json` in browser JavaScript and does not contain Airtable credentials.
 
 ### Adding More Metrics
 

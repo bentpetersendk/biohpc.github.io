@@ -22,7 +22,21 @@ REQUEST_TIMEOUT = 30
 MAX_REQUEST_ATTEMPTS = 5
 RETRY_BACKOFF_SECONDS = (2, 4, 8, 16)
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STATS_PATH = REPO_ROOT / "stats.json"
+
+
+def get_stats_path() -> Path:
+    output_path = os.environ.get("BIOHPC_STATS_OUTPUT_PATH", "").strip()
+    if not output_path:
+        return REPO_ROOT / "stats.json"
+
+    path = Path(output_path).expanduser()
+    if path.is_absolute():
+        return path
+
+    return REPO_ROOT / path
+
+
+STATS_PATH = get_stats_path()
 
 
 @dataclass(frozen=True)
