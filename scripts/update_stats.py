@@ -36,6 +36,13 @@ def get_stats_path() -> Path:
     return REPO_ROOT / path
 
 
+def get_display_path(path: Path) -> Path:
+    try:
+        return path.relative_to(REPO_ROOT)
+    except ValueError:
+        return path
+
+
 STATS_PATH = get_stats_path()
 
 
@@ -280,7 +287,7 @@ def main() -> int:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    print(f"Wrote {STATS_PATH.relative_to(REPO_ROOT)}")
+    print(f"Wrote {get_display_path(STATS_PATH)}")
     return 0
 
 
