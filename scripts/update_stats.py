@@ -22,28 +22,7 @@ REQUEST_TIMEOUT = 30
 MAX_REQUEST_ATTEMPTS = 5
 RETRY_BACKOFF_SECONDS = (2, 4, 8, 16)
 REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def get_stats_path() -> Path:
-    output_path = os.environ.get("BIOHPC_STATS_OUTPUT_PATH", "").strip()
-    if not output_path:
-        return REPO_ROOT / "stats.json"
-
-    path = Path(output_path).expanduser()
-    if path.is_absolute():
-        return path
-
-    return REPO_ROOT / path
-
-
-def get_display_path(path: Path) -> Path:
-    try:
-        return path.relative_to(REPO_ROOT)
-    except ValueError:
-        return path
-
-
-STATS_PATH = get_stats_path()
+DEFAULT_STATS_PATH = Path("biohpc/stats.json")
 
 
 @dataclass(frozen=True)
@@ -257,6 +236,14 @@ def empty_stats() -> dict[str, Any]:
     return json.loads(json.dumps(STATS_TEMPLATE))
 
 
+def get_output_path() -> Path:
+    configured_path = os.environ.get("STATS_OUTPUT_PATH", "").strip()
+    output_path = Path(configured_path) if configured_path else DEFAULT_STATS_PATH
+    if not output_path.is_absolute():
+        output_path = REPO_ROOT / output_path
+    return output_path
+
+
 def build_stats() -> dict[str, Any]:
     token = require_env("AIRTABLE_TOKEN")
     base_id = require_env("AIRTABLE_BASE_ID")
@@ -280,14 +267,15 @@ def build_stats() -> dict[str, Any]:
 
 
 def main() -> int:
+    output_path = get_output_path()
     try:
         stats = build_stats()
-        write_json_atomically(STATS_PATH, stats)
+        write_json_atomically(output_path, stats)
     except (AirtableError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    print(f"Wrote {get_display_path(STATS_PATH)}")
+    print(f"Wrote {output_path.relative_to(REPO_ROOT)}")
     return 0
 
 

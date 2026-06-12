@@ -27,11 +27,12 @@
     showLoading();
 
     try {
-      const response = await fetch("./stats.json", { cache: "no-store" });
-      if (!response.ok) throw new Error(`stats.json returned HTTP ${response.status}`);
+      const statsUrl = getStatsUrl();
+      const response = await fetch(statsUrl, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${statsUrl} returned HTTP ${response.status}`);
 
       const data = await response.json();
-      if (!data || typeof data !== "object") throw new Error("stats.json does not contain an object.");
+      if (!data || typeof data !== "object") throw new Error("Statistics JSON does not contain an object.");
 
       state.raw = data;
       state.tables = detectTables(data);
@@ -48,6 +49,13 @@
       showError("Statistics could not be loaded. Please try again later.");
       renderStatisticsInfo(null);
     }
+  }
+
+  function getStatsUrl() {
+    if (typeof siteConfig !== "undefined" && siteConfig.urls?.biohpcStats) {
+      return siteConfig.urls.biohpcStats;
+    }
+    throw new Error("BioHPC statistics URL is not configured.");
   }
 
   function showLoading() {

@@ -1,5 +1,6 @@
 const siteConfig = {
   urls: {
+    biohpcStats: "https://raw.githubusercontent.com/bentpetersendk/dashboard-data/main/biohpc/stats.json",
     piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
     projectSpaceRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagKILRMZ6p0ek9Vc/form",
     userRequestForm: "",

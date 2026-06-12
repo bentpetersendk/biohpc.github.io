@@ -41,7 +41,7 @@ function loadWebsiteStats() {
   ];
   if (!statElements.some((id) => document.getElementById(id))) return;
 
-  fetch("./stats.json", { cache: "no-store" })
+  fetch(getConfigValue("urls.biohpcStats"), { cache: "no-store" })
     .then((response) => {
       if (!response.ok) throw new Error("Stats unavailable");
       return response.json();
