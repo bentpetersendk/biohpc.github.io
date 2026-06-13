@@ -324,7 +324,7 @@
 
     if (typeof window.animateCounter === "function") {
       window.animateCounter(element, value, 1800, (currentValue, isComplete) =>
-        formatValue(isComplete ? value : currentValue, key)
+        formatValue(isComplete ? value : Math.round(currentValue), key)
       );
       return;
     }
