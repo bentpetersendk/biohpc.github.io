@@ -22,10 +22,55 @@ function markActiveNavigation() {
   });
 }
 
+function animateCounter(element, targetValue, duration = 1000, formatter = formatCounterValue) {
+  const target = Number(targetValue);
+  if (!element || !Number.isFinite(target)) {
+    if (element && targetValue !== null && targetValue !== undefined) element.textContent = String(targetValue);
+    return;
+  }
+
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    element.textContent = formatter(target);
+    return;
+  }
+
+  const start = 0;
+  const startTime = performance.now();
+
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    const value = start + (target - start) * easedProgress;
+
+    element.textContent = formatter(value, progress === 1);
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      element.textContent = formatter(target, true);
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+function formatCounterValue(value) {
+  return Math.round(value).toLocaleString();
+}
+
+if (typeof window !== "undefined") {
+  window.animateCounter = animateCounter;
+}
+
 function updateTextById(id, value) {
   const element = document.getElementById(id);
-  if (element && Number.isFinite(value)) {
-    element.textContent = value.toLocaleString();
+  if (!element) return;
+
+  if (Number.isFinite(value)) {
+    animateCounter(element, value);
+  } else if (value !== null && value !== undefined) {
+    element.textContent = String(value);
   }
 }
 

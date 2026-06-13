@@ -109,7 +109,7 @@
 
       const value = document.createElement("span");
       value.className = "dashboard-metric-value";
-      value.textContent = formatValue(metric.value, metric.key);
+      updateMetricValue(value, metric.value, metric.key);
 
       const label = document.createElement("h3");
       label.textContent = metric.label;
@@ -314,6 +314,22 @@
     const rows = [...activityTable.rows].slice(0, 20);
     const columns = activityTable.columns.filter((column) => rows.some((row) => row[column] !== undefined && row[column] !== ""));
     target.appendChild(createSortableTable({ ...activityTable, rows, columns }));
+  }
+
+  function updateMetricValue(element, value, key) {
+    if (!Number.isFinite(value)) {
+      element.textContent = value === null || value === undefined || value === "" ? "--" : String(value);
+      return;
+    }
+
+    if (typeof window.animateCounter === "function") {
+      window.animateCounter(element, value, 1000, (currentValue, isComplete) =>
+        formatValue(isComplete ? value : currentValue, key)
+      );
+      return;
+    }
+
+    element.textContent = formatValue(value, key);
   }
 
   function detectActivityTable(tables) {
