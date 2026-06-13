@@ -22,7 +22,7 @@ function markActiveNavigation() {
   });
 }
 
-function animateCounter(element, targetValue, duration = 1000, formatter = formatCounterValue) {
+function animateCounter(element, targetValue, duration = 1800, formatter = formatCounterValue) {
   const target = Number(targetValue);
   if (!element || !Number.isFinite(target)) {
     if (element && targetValue !== null && targetValue !== undefined) element.textContent = String(targetValue);

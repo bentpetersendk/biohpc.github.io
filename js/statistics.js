@@ -323,7 +323,7 @@
     }
 
     if (typeof window.animateCounter === "function") {
-      window.animateCounter(element, value, 1000, (currentValue, isComplete) =>
+      window.animateCounter(element, value, 1800, (currentValue, isComplete) =>
         formatValue(isComplete ? value : currentValue, key)
       );
       return;
