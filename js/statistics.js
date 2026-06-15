@@ -14,6 +14,7 @@
       label: "Principal Investigators",
       metrics: [
         { key: "pis.registered", label: "Registered Principal Investigators" },
+        { key: "pis.approved", label: "Approved Principal Investigators" },
       ],
     },
     {
