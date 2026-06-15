@@ -9,13 +9,28 @@
   const META_KEY_PATTERN = /(updated|created|generated|timestamp|source|status|schema|version|metadata|meta)$/i;
   const TIME_KEY_PATTERN = /(date|time|month|week|year|period|updated|created|generated)/i;
   const ACTIVITY_KEY_PATTERN = /(activity|event|events|log|audit|recent|history)/i;
-  const PUBLIC_METRICS = [
-    { key: "pis.registered", label: "Registered Principal Investigators" },
-    { key: "users.registered", label: "Total Users Registered" },
-    { key: "users.active", label: "Active Users" },
-    { key: "projects.total", label: "Total Project Spaces" },
-    { key: "projects.ordered", label: "Project Spaces Being Provisioned" },
-    { key: "projects.active", label: "Active Project Spaces" },
+  const METRIC_SECTIONS = [
+    {
+      label: "Principal Investigators",
+      metrics: [
+        { key: "pis.registered", label: "Registered Principal Investigators" },
+      ],
+    },
+    {
+      label: "Users",
+      metrics: [
+        { key: "users.registered", label: "Total Users Registered" },
+        { key: "users.active", label: "Active Users" },
+      ],
+    },
+    {
+      label: "Project Spaces",
+      metrics: [
+        { key: "projects.total", label: "Total Project Spaces" },
+        { key: "projects.ordered", label: "Project Spaces Being Provisioned" },
+        { key: "projects.active", label: "Active Project Spaces" },
+      ],
+    },
   ];
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -104,38 +119,73 @@
       return;
     }
 
-    metrics.forEach((metric) => {
-      const card = document.createElement("article");
-      card.className = "dashboard-metric-card";
+    getMetricSections(data).forEach((section) => {
+      const sectionElement = document.createElement("section");
+      sectionElement.className = "dashboard-metric-section";
 
-      const value = document.createElement("span");
-      value.className = "dashboard-metric-value";
-      updateMetricValue(value, metric.value, metric.key);
+      const heading = document.createElement("h3");
+      heading.className = "dashboard-metric-section-title";
+      heading.textContent = section.label;
 
-      const label = document.createElement("h3");
-      label.textContent = metric.label;
+      const metricGrid = document.createElement("div");
+      metricGrid.className = "dashboard-metric-grid";
+      metricGrid.dataset.count = String(section.metrics.length);
 
-      const trend = detectTrend(data, metric.key);
-      if (trend) {
-        const trendElement = document.createElement("p");
-        trendElement.className = trend.direction >= 0 ? "metric-trend up" : "metric-trend down";
-        trendElement.textContent = `${trend.direction >= 0 ? "+" : "-"}${formatNumber(Math.abs(trend.change))} from previous`;
-        card.append(value, label, trendElement);
-      } else {
-        card.append(value, label);
-      }
+      section.metrics.forEach((metric) => {
+        metricGrid.appendChild(createMetricCard(data, metric));
+      });
 
-      grid.appendChild(card);
+      sectionElement.append(heading, metricGrid);
+      grid.appendChild(sectionElement);
     });
   }
 
+  function createMetricCard(data, metric) {
+    const card = document.createElement("article");
+    card.className = "dashboard-metric-card";
+
+    const value = document.createElement("span");
+    value.className = "dashboard-metric-value";
+    updateMetricValue(value, metric.value, metric.key);
+
+    const label = document.createElement("h3");
+    label.textContent = metric.label;
+
+    const trend = detectTrend(data, metric.key);
+    if (trend) {
+      const trendElement = document.createElement("p");
+      trendElement.className = trend.direction >= 0 ? "metric-trend up" : "metric-trend down";
+      trendElement.textContent = `${trend.direction >= 0 ? "+" : "-"}${formatNumber(Math.abs(trend.change))} from previous`;
+      card.append(value, label, trendElement);
+    } else {
+      card.append(value, label);
+    }
+
+    return card;
+  }
+
   function getTopLevelMetrics(data) {
-    return PUBLIC_METRICS
+    return METRIC_SECTIONS
+      .flatMap((section) => section.metrics)
       .map((metric) => ({
         ...metric,
         value: getNestedValue(data, metric.key),
       }))
       .filter((metric) => Number.isFinite(metric.value));
+  }
+
+  function getMetricSections(data) {
+    return METRIC_SECTIONS
+      .map((section) => ({
+        ...section,
+        metrics: section.metrics
+          .map((metric) => ({
+            ...metric,
+            value: getNestedValue(data, metric.key),
+          }))
+          .filter((metric) => Number.isFinite(metric.value)),
+      }))
+      .filter((section) => section.metrics.length);
   }
 
   function getNestedValue(value, path) {
