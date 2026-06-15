@@ -70,6 +70,8 @@ The public `users.registered` metric represents historical platform growth: user
 
 The public `pis.registered` metric represents all Principal Investigators registered in BioHPC. The public `pis.approved` metric represents Principal Investigators whose registration status is Approved, and `pis.pending_requests` represents Principal Investigators whose registration status is Pending Verification.
 
+If no `AIRTABLE_APPROVED_PIS_FORMULA` or `AIRTABLE_PENDING_PI_REQUESTS_FORMULA` override is configured, the generator uses the safe default formulas above and falls back to counting `PI Registration Status` values from fetched `PIs` records if Airtable formula filtering returns zero records.
+
 ### Publishing Statistics
 
 Use the dashboard-data workflow included in `dashboard-data/.github/workflows/update_biohpc_stats.yml` as the scheduled publisher. It generates `biohpc/stats.json` in the dashboard-data repository and commits only when the JSON changes.

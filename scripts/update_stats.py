@@ -32,6 +32,8 @@ class Metric:
     table: str
     formula_env: str | None = None
     default_formula: str | None = None
+    fallback_field: str | None = None
+    fallback_values: tuple[str, ...] = ()
 
 
 USER_TOTAL_REGISTERED_FORMULA = (
@@ -84,6 +86,8 @@ METRICS: tuple[Metric, ...] = (
         "PIs",
         "AIRTABLE_APPROVED_PIS_FORMULA",
         PI_APPROVED_FORMULA,
+        "PI Registration Status",
+        ("Approved",),
     ),
     Metric(
         "pis",
@@ -91,6 +95,8 @@ METRICS: tuple[Metric, ...] = (
         "PIs",
         "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
         PI_PENDING_FORMULA,
+        "PI Registration Status",
+        ("Pending Verification",),
     ),
     Metric("projects", "total", "Projects"),
     Metric(
@@ -227,6 +233,39 @@ def fetch_table_count(
         params["offset"] = str(offset)
 
 
+def fetch_table_records(
+    session: requests.Session,
+    base_id: str,
+    table_name: str,
+    view_name: str | None = None,
+) -> list[dict[str, Any]]:
+    encoded_table = quote(table_name, safe="")
+    url = f"{AIRTABLE_API_ROOT}/{base_id}/{encoded_table}"
+    params: dict[str, str | int] = {"pageSize": 100}
+    if view_name:
+        params["view"] = view_name
+
+    all_records: list[dict[str, Any]] = []
+    while True:
+        response = get_airtable_page(session, url, params, table_name)
+
+        try:
+            payload: dict[str, Any] = response.json()
+        except ValueError as exc:
+            raise AirtableError(f"Airtable returned invalid JSON for table '{table_name}'.") from exc
+
+        records = payload.get("records")
+        if not isinstance(records, list):
+            raise AirtableError(f"Airtable response for table '{table_name}' did not include records.")
+
+        all_records.extend(record for record in records if isinstance(record, dict))
+
+        offset = payload.get("offset")
+        if not offset:
+            return all_records
+        params["offset"] = str(offset)
+
+
 def write_json_atomically(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     serialized = json.dumps(data, indent=2) + "\n"
@@ -260,6 +299,12 @@ def get_metric_formula(metric: Metric) -> str | None:
     return metric.default_formula
 
 
+def has_metric_formula_override(metric: Metric) -> bool:
+    if not metric.formula_env:
+        return False
+    return bool(os.environ.get(metric.formula_env, "").strip())
+
+
 def describe_formula(formula: str | None) -> str:
     return formula if formula else "<none>"
 
@@ -269,6 +314,68 @@ def log_metric_count(metric: Metric, formula: str | None, count: int) -> None:
     print(
         f"Metric {metric_name}: table='{metric.table}', "
         f"formula={describe_formula(formula)}, count={count}",
+        file=sys.stderr,
+    )
+
+
+def normalize_airtable_values(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value.strip()]
+    if isinstance(value, list):
+        values: list[str] = []
+        for item in value:
+            values.extend(normalize_airtable_values(item))
+        return values
+    if isinstance(value, dict):
+        for key in ("name", "text", "value"):
+            nested = value.get(key)
+            if nested is not None:
+                return normalize_airtable_values(nested)
+        return []
+    return [str(value).strip()]
+
+
+def count_records_by_field_values(
+    session: requests.Session,
+    base_id: str,
+    table_name: str,
+    view_name: str | None,
+    field_name: str,
+    expected_values: tuple[str, ...],
+) -> tuple[int, dict[str, int]]:
+    expected = {value.casefold() for value in expected_values}
+    distribution: dict[str, int] = {}
+    count = 0
+
+    for record in fetch_table_records(session, base_id, table_name, view_name):
+        fields = record.get("fields", {})
+        if not isinstance(fields, dict):
+            continue
+
+        values = normalize_airtable_values(fields.get(field_name))
+        if not values:
+            distribution["<blank>"] = distribution.get("<blank>", 0) + 1
+            continue
+
+        normalized_values = {value.casefold() for value in values}
+        if expected.intersection(normalized_values):
+            count += 1
+
+        for value in values:
+            label = value or "<blank>"
+            distribution[label] = distribution.get(label, 0) + 1
+
+    return count, distribution
+
+
+def log_field_distribution(metric: Metric, distribution: dict[str, int]) -> None:
+    metric_name = f"{metric.section}.{metric.key}"
+    values = ", ".join(f"{value}={count}" for value, count in sorted(distribution.items()))
+    print(
+        f"Metric {metric_name}: fallback field='{metric.fallback_field}', "
+        f"status distribution={values or '<none>'}",
         file=sys.stderr,
     )
 
@@ -310,8 +417,23 @@ def build_stats() -> dict[str, Any]:
             view_name,
             formula,
         )
-        stats[metric.section][metric.key] = count
         log_metric_count(metric, formula, count)
+        if count == 0 and metric.fallback_field and metric.fallback_values and not has_metric_formula_override(metric):
+            fallback_count, distribution = count_records_by_field_values(
+                session,
+                base_id,
+                metric.table,
+                view_name,
+                metric.fallback_field,
+                metric.fallback_values,
+            )
+            log_field_distribution(metric, distribution)
+            print(
+                f"Metric {metric.section}.{metric.key}: using fallback count={fallback_count}",
+                file=sys.stderr,
+            )
+            count = fallback_count
+        stats[metric.section][metric.key] = count
 
     updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return {"updated": updated, **stats}
