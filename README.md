@@ -46,6 +46,8 @@ Optional:
 
 Optional repository variables can override the default Airtable `filterByFormula` expressions:
 
+- `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`
+- `AIRTABLE_ACTIVE_USERS_FORMULA`
 - `AIRTABLE_APPROVED_USERS_FORMULA`
 - `AIRTABLE_PENDING_USER_REQUESTS_FORMULA`
 - `AIRTABLE_APPROVED_PIS_FORMULA`
@@ -55,12 +57,16 @@ Optional repository variables can override the default Airtable `filterByFormula
 
 The defaults use the current BioHPC Airtable schema:
 
-- approved users: `LOWER({Account Status}) = "active"`
-- pending user requests: `LOWER({Status}) = "pending pi approval"`
+- total users registered: `OR(LOWER({Account Status}) = "active", LOWER({Account Status}) = "inactive", LOWER({Account Status}) = "disabled", LOWER({Account Status}) = "suspended", LOWER({Account Status}) = "deactivated", LOWER({Account Status}) = "closed")`
+- active users: `LOWER({Account Status}) = "active"`
+- approved users: `LOWER({Account Status}) = "active"` retained for existing consumers and defaults to the active-access definition.
+- pending user requests: `LOWER({Account Status}) = "pending pi approval"`
 - approved PIs: `LOWER({PI Registration Status}) = "approved"`
 - pending PI requests: `{PI Approval Decision} = BLANK()`
 - active projects: `LOWER({Project Status}) = "active"`
 - ordered projects: `LOWER({Project Status}) = "ordered"`
+
+The public `users.registered` metric represents historical platform growth: users who have ever been approved and onboarded. The public `users.active` metric represents current BioHPC access. If new non-active onboarded user statuses are added in Airtable, include them by updating `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`.
 
 ### Publishing Statistics
 

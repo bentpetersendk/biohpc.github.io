@@ -11,7 +11,8 @@
   const ACTIVITY_KEY_PATTERN = /(activity|event|events|log|audit|recent|history)/i;
   const PUBLIC_METRICS = [
     { key: "pis.registered", label: "Registered Principal Investigators" },
-    { key: "users.registered", label: "Users" },
+    { key: "users.registered", label: "Total Users Registered" },
+    { key: "users.active", label: "Active Users" },
     { key: "projects.total", label: "Total Project Spaces" },
     { key: "projects.ordered", label: "Project Spaces Being Provisioned" },
     { key: "projects.active", label: "Active Project Spaces" },

@@ -34,14 +34,39 @@ class Metric:
     default_formula: str | None = None
 
 
+USER_TOTAL_REGISTERED_FORMULA = (
+    "OR("
+    'LOWER({Account Status}) = "active",'
+    'LOWER({Account Status}) = "inactive",'
+    'LOWER({Account Status}) = "disabled",'
+    'LOWER({Account Status}) = "suspended",'
+    'LOWER({Account Status}) = "deactivated",'
+    'LOWER({Account Status}) = "closed"'
+    ")"
+)
+USER_ACTIVE_FORMULA = 'LOWER({Account Status}) = "active"'
+
 METRICS: tuple[Metric, ...] = (
-    Metric("users", "registered", "Users"),
+    Metric(
+        "users",
+        "registered",
+        "Users",
+        "AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA",
+        USER_TOTAL_REGISTERED_FORMULA,
+    ),
+    Metric(
+        "users",
+        "active",
+        "Users",
+        "AIRTABLE_ACTIVE_USERS_FORMULA",
+        USER_ACTIVE_FORMULA,
+    ),
     Metric(
         "users",
         "approved",
         "Users",
         "AIRTABLE_APPROVED_USERS_FORMULA",
-        'LOWER({Account Status}) = "active"',
+        USER_ACTIVE_FORMULA,
     ),
     Metric(
         "users",
@@ -86,6 +111,7 @@ METRICS: tuple[Metric, ...] = (
 STATS_TEMPLATE: dict[str, Any] = {
     "users": {
         "registered": 0,
+        "active": 0,
         "approved": 0,
         "pending_requests": 0,
     },
