@@ -13,7 +13,7 @@
     { key: "pis.registered", label: "Registered Principal Investigators" },
     { key: "users.registered", label: "Users" },
     { key: "projects.total", label: "Total Project Spaces" },
-    { key: "projects.ordered", label: "Projects in Onboarding" },
+    { key: "projects.ordered", label: "Project Spaces Being Provisioned" },
     { key: "projects.active", label: "Active Project Spaces" },
   ];
 

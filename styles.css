@@ -940,6 +940,8 @@ p {
 .dashboard-chart-card h3,
 .dashboard-table-card h3 {
   font-size: 1.05rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .metric-trend {
