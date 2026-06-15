@@ -45,6 +45,8 @@ USER_TOTAL_REGISTERED_FORMULA = (
     ")"
 )
 USER_ACTIVE_FORMULA = 'LOWER({Account Status}) = "active"'
+PI_APPROVED_FORMULA = '{PI Registration Status} = "Approved"'
+PI_PENDING_FORMULA = '{PI Registration Status} = "Pending Verification"'
 
 METRICS: tuple[Metric, ...] = (
     Metric(
@@ -81,14 +83,14 @@ METRICS: tuple[Metric, ...] = (
         "approved",
         "PIs",
         "AIRTABLE_APPROVED_PIS_FORMULA",
-        'LOWER({PI Registration Status}) = "approved"',
+        PI_APPROVED_FORMULA,
     ),
     Metric(
         "pis",
         "pending_requests",
-        "PI Approval Requests",
+        "PIs",
         "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
-        "{PI Approval Decision} = BLANK()",
+        PI_PENDING_FORMULA,
     ),
     Metric("projects", "total", "Projects"),
     Metric(
@@ -258,6 +260,19 @@ def get_metric_formula(metric: Metric) -> str | None:
     return metric.default_formula
 
 
+def describe_formula(formula: str | None) -> str:
+    return formula if formula else "<none>"
+
+
+def log_metric_count(metric: Metric, formula: str | None, count: int) -> None:
+    metric_name = f"{metric.section}.{metric.key}"
+    print(
+        f"Metric {metric_name}: table='{metric.table}', "
+        f"formula={describe_formula(formula)}, count={count}",
+        file=sys.stderr,
+    )
+
+
 def empty_stats() -> dict[str, Any]:
     return json.loads(json.dumps(STATS_TEMPLATE))
 
@@ -287,13 +302,16 @@ def build_stats() -> dict[str, Any]:
 
     stats = empty_stats()
     for metric in METRICS:
-        stats[metric.section][metric.key] = fetch_table_count(
+        formula = get_metric_formula(metric)
+        count = fetch_table_count(
             session,
             base_id,
             metric.table,
             view_name,
-            get_metric_formula(metric),
+            formula,
         )
+        stats[metric.section][metric.key] = count
+        log_metric_count(metric, formula, count)
 
     updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return {"updated": updated, **stats}

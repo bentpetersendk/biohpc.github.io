@@ -29,7 +29,6 @@ Website statistics are calculated directly from the operational Airtable source 
 - `Research Groups`
 - `Projects`
 - `User Access Requests`
-- `PI Approval Requests`
 
 No separate Website Statistics table is required.
 
@@ -62,14 +61,14 @@ The defaults use the current BioHPC Airtable schema:
 - approved users: `LOWER({Account Status}) = "active"` retained for existing consumers and defaults to the active-access definition.
 - pending user requests: `LOWER({Account Status}) = "pending pi approval"`
 - registered PIs: all records in the `PIs` table.
-- approved PIs: `LOWER({PI Registration Status}) = "approved"`
-- pending PI requests: `{PI Approval Decision} = BLANK()`
+- approved PIs: `{PI Registration Status} = "Approved"`
+- pending PIs: `{PI Registration Status} = "Pending Verification"`
 - active projects: `LOWER({Project Status}) = "active"`
 - ordered projects: `LOWER({Project Status}) = "ordered"`
 
 The public `users.registered` metric represents historical platform growth: users who have ever been approved and onboarded. The public `users.active` metric represents current BioHPC access. If new non-active onboarded user statuses are added in Airtable, include them by updating `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`.
 
-The public `pis.registered` metric represents all Principal Investigators registered in BioHPC. The public `pis.approved` metric represents Principal Investigators whose registration status is Approved.
+The public `pis.registered` metric represents all Principal Investigators registered in BioHPC. The public `pis.approved` metric represents Principal Investigators whose registration status is Approved, and `pis.pending_requests` represents Principal Investigators whose registration status is Pending Verification.
 
 ### Publishing Statistics
 
