@@ -48,7 +48,6 @@ USER_TOTAL_REGISTERED_FORMULA = (
     ")"
 )
 USER_ACTIVE_FORMULA = 'LOWER({Account Status}) = "active"'
-PI_PENDING_FORMULA = '{PI Registration Status} = "Pending Verification"'
 USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA = (
     "OR("
     'LOWER({Status}) = "pending pi approval",'
@@ -75,14 +74,6 @@ METRICS: tuple[Metric, ...] = (
     ),
     Metric(
         "users",
-        "approved",
-        "Users",
-        None,
-        "AIRTABLE_APPROVED_USERS_FORMULA",
-        USER_ACTIVE_FORMULA,
-    ),
-    Metric(
-        "users",
         "pending_requests",
         "Access Requests",
         "AIRTABLE_ACCESS_REQUESTS_TABLE",
@@ -92,16 +83,6 @@ METRICS: tuple[Metric, ...] = (
         ("Pending PI Approval", "Approved - Pending Provisioning"),
     ),
     Metric("pis", "registered", "PIs"),
-    Metric(
-        "pis",
-        "pending_requests",
-        "PIs",
-        None,
-        "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
-        PI_PENDING_FORMULA,
-        "PI Registration Status",
-        ("Pending Verification",),
-    ),
     Metric("projects", "total", "Projects"),
     Metric(
         "projects",
@@ -126,12 +107,10 @@ STATS_TEMPLATE: dict[str, Any] = {
     "users": {
         "registered": 0,
         "active": 0,
-        "approved": 0,
         "pending_requests": 0,
     },
     "pis": {
         "registered": 0,
-        "pending_requests": 0,
     },
     "projects": {
         "total": 0,

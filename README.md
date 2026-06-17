@@ -48,9 +48,7 @@ Optional repository variables can override the default Airtable `filterByFormula
 - `AIRTABLE_ACCESS_REQUESTS_TABLE` - table name for user onboarding access requests. Defaults to `Access Requests`.
 - `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`
 - `AIRTABLE_ACTIVE_USERS_FORMULA`
-- `AIRTABLE_APPROVED_USERS_FORMULA`
 - `AIRTABLE_PENDING_USER_REQUESTS_FORMULA`
-- `AIRTABLE_PENDING_PI_REQUESTS_FORMULA`
 - `AIRTABLE_ACTIVE_PROJECTS_FORMULA`
 - `AIRTABLE_ORDERED_PROJECTS_FORMULA`
 
@@ -58,18 +56,16 @@ The defaults use the current BioHPC Airtable schema:
 
 - total users registered: `OR(LOWER({Account Status}) = "active", LOWER({Account Status}) = "inactive", LOWER({Account Status}) = "disabled", LOWER({Account Status}) = "suspended", LOWER({Account Status}) = "deactivated", LOWER({Account Status}) = "closed")`
 - active users: `LOWER({Account Status}) = "active"`
-- approved users: `LOWER({Account Status}) = "active"` retained for existing consumers and defaults to the active-access definition.
 - user access requests in progress: `OR(LOWER({Status}) = "pending pi approval", LOWER({Status}) = "approved - pending provisioning")` from the `Access Requests` table.
 - registered PIs: all records in the `PIs` table.
-- pending PIs: `{PI Registration Status} = "Pending Verification"`
 - active projects: `LOWER({Project Status}) = "active"`
 - ordered projects: `LOWER({Project Status}) = "ordered"`
 
 The public `users.registered` metric represents historical platform growth: users who have ever been approved and onboarded. The public `users.active` metric represents current BioHPC access. The public `users.pending_requests` metric represents user access requests currently waiting for PI approval or approved and waiting for provisioning. If new non-active onboarded user statuses are added in Airtable, include them by updating `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`.
 
-The public `pis.registered` metric represents all Principal Investigators registered in BioHPC, and `pis.pending_requests` represents Principal Investigators whose registration status is Pending Verification.
+The public `pis.registered` metric represents all Principal Investigators registered in BioHPC.
 
-If no `AIRTABLE_PENDING_USER_REQUESTS_FORMULA` override is configured, the generator can fall back to counting matching `Status` values from fetched access request records if Airtable formula filtering returns zero records. If no `AIRTABLE_PENDING_PI_REQUESTS_FORMULA` override is configured, the generator can fall back to counting `PI Registration Status` values from fetched `PIs` records.
+If no `AIRTABLE_PENDING_USER_REQUESTS_FORMULA` override is configured, the generator can fall back to counting matching `Status` values from fetched access request records if Airtable formula filtering returns zero records.
 
 ### Publishing Statistics
 
