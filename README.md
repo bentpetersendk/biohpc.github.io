@@ -26,7 +26,6 @@ Website statistics are calculated directly from the operational Airtable source 
 
 - `Users`
 - `PIs`
-- `Research Groups`
 - `Projects`
 - `Access Requests`
 

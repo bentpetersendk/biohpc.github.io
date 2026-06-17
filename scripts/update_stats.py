@@ -100,7 +100,6 @@ METRICS: tuple[Metric, ...] = (
         "AIRTABLE_ACTIVE_PROJECTS_FORMULA",
         'LOWER({Project Status}) = "active"',
     ),
-    Metric("research_groups", "total", "Research Groups"),
 )
 
 STATS_TEMPLATE: dict[str, Any] = {
@@ -116,9 +115,6 @@ STATS_TEMPLATE: dict[str, Any] = {
         "total": 0,
         "ordered": 0,
         "active": 0,
-    },
-    "research_groups": {
-        "total": 0,
     },
 }
 
