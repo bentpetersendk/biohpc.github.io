@@ -30,6 +30,7 @@ class Metric:
     section: str
     key: str
     table: str
+    table_env: str | None = None
     formula_env: str | None = None
     default_formula: str | None = None
     fallback_field: str | None = None
@@ -47,14 +48,20 @@ USER_TOTAL_REGISTERED_FORMULA = (
     ")"
 )
 USER_ACTIVE_FORMULA = 'LOWER({Account Status}) = "active"'
-PI_APPROVED_FORMULA = '{PI Registration Status} = "Approved"'
 PI_PENDING_FORMULA = '{PI Registration Status} = "Pending Verification"'
+USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA = (
+    "OR("
+    'LOWER({Status}) = "pending pi approval",'
+    'LOWER({Status}) = "approved - pending provisioning"'
+    ")"
+)
 
 METRICS: tuple[Metric, ...] = (
     Metric(
         "users",
         "registered",
         "Users",
+        None,
         "AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA",
         USER_TOTAL_REGISTERED_FORMULA,
     ),
@@ -62,6 +69,7 @@ METRICS: tuple[Metric, ...] = (
         "users",
         "active",
         "Users",
+        None,
         "AIRTABLE_ACTIVE_USERS_FORMULA",
         USER_ACTIVE_FORMULA,
     ),
@@ -69,30 +77,26 @@ METRICS: tuple[Metric, ...] = (
         "users",
         "approved",
         "Users",
+        None,
         "AIRTABLE_APPROVED_USERS_FORMULA",
         USER_ACTIVE_FORMULA,
     ),
     Metric(
         "users",
         "pending_requests",
-        "Users",
+        "Access Requests",
+        "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_PENDING_USER_REQUESTS_FORMULA",
-        'LOWER({Account Status}) = "pending pi approval"',
+        USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA,
+        "Status",
+        ("Pending PI Approval", "Approved - Pending Provisioning"),
     ),
     Metric("pis", "registered", "PIs"),
     Metric(
         "pis",
-        "approved",
-        "PIs",
-        "AIRTABLE_APPROVED_PIS_FORMULA",
-        PI_APPROVED_FORMULA,
-        "PI Registration Status",
-        ("Approved",),
-    ),
-    Metric(
-        "pis",
         "pending_requests",
         "PIs",
+        None,
         "AIRTABLE_PENDING_PI_REQUESTS_FORMULA",
         PI_PENDING_FORMULA,
         "PI Registration Status",
@@ -103,6 +107,7 @@ METRICS: tuple[Metric, ...] = (
         "projects",
         "ordered",
         "Projects",
+        None,
         "AIRTABLE_ORDERED_PROJECTS_FORMULA",
         'LOWER({Project Status}) = "ordered"',
     ),
@@ -110,6 +115,7 @@ METRICS: tuple[Metric, ...] = (
         "projects",
         "active",
         "Projects",
+        None,
         "AIRTABLE_ACTIVE_PROJECTS_FORMULA",
         'LOWER({Project Status}) = "active"',
     ),
@@ -125,7 +131,6 @@ STATS_TEMPLATE: dict[str, Any] = {
     },
     "pis": {
         "registered": 0,
-        "approved": 0,
         "pending_requests": 0,
     },
     "projects": {
@@ -299,6 +304,13 @@ def get_metric_formula(metric: Metric) -> str | None:
     return metric.default_formula
 
 
+def get_metric_table(metric: Metric) -> str:
+    if not metric.table_env:
+        return metric.table
+
+    return os.environ.get(metric.table_env, "").strip() or metric.table
+
+
 def has_metric_formula_override(metric: Metric) -> bool:
     if not metric.formula_env:
         return False
@@ -309,10 +321,10 @@ def describe_formula(formula: str | None) -> str:
     return formula if formula else "<none>"
 
 
-def log_metric_count(metric: Metric, formula: str | None, count: int) -> None:
+def log_metric_count(metric: Metric, table_name: str, formula: str | None, count: int) -> None:
     metric_name = f"{metric.section}.{metric.key}"
     print(
-        f"Metric {metric_name}: table='{metric.table}', "
+        f"Metric {metric_name}: table='{table_name}', "
         f"formula={describe_formula(formula)}, count={count}",
         file=sys.stderr,
     )
@@ -410,19 +422,20 @@ def build_stats() -> dict[str, Any]:
     stats = empty_stats()
     for metric in METRICS:
         formula = get_metric_formula(metric)
+        table_name = get_metric_table(metric)
         count = fetch_table_count(
             session,
             base_id,
-            metric.table,
+            table_name,
             view_name,
             formula,
         )
-        log_metric_count(metric, formula, count)
+        log_metric_count(metric, table_name, formula, count)
         if count == 0 and metric.fallback_field and metric.fallback_values and not has_metric_formula_override(metric):
             fallback_count, distribution = count_records_by_field_values(
                 session,
                 base_id,
-                metric.table,
+                table_name,
                 view_name,
                 metric.fallback_field,
                 metric.fallback_values,
