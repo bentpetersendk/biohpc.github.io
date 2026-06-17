@@ -3,9 +3,9 @@ const siteConfig = {
     biohpcStats: "https://raw.githubusercontent.com/bentpetersendk/dashboard-data/main/biohpc/stats.json",
     piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
     projectSpaceRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagKILRMZ6p0ek9Vc/form",
-    userRequestForm: "",
+    userRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagW96PfyUrhBkk49/form",
     documentation: "https://rubus.ku.dk/",
-    support: "https://airtable.com/PLACEHOLDER_SUPPORT"
+    support: "mailto:biohpc@ku.dk"
   },
   contact: {
     email: "biohpc@ku.dk",
