@@ -19,8 +19,8 @@ const siteConfig = {
       }
     },
     endpoints: {
-      lookup: "",
-      decision: ""
+      lookup: "https://hooks.airtable.com/workflows/v1/genericWebhook/appQsnn57Oi8vNAWD/wflw8U01vvjFLG2AV/wtre8Om9dTPDOuTtJ",
+      decision: "https://hooks.airtable.com/workflows/v1/genericWebhook/appQsnn57Oi8vNAWD/wflmJ7sx35NcVRh5P/wtrPoTBlzZTwbLN5N"
     },
     messages: {
       invalidLink: "Invalid approval link.",

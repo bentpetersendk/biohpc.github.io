@@ -176,6 +176,19 @@ The implementation assumes the Project Membership Requests table includes at lea
 - `Technical Contact`
 - `Principal Investigator`
 
+The live BioHPC base currently uses the `Project Membership Requests` table with these exact existing workflow fields:
+
+- `Status`
+- `Approval Link`
+- `Approval Date`
+- `Source`
+- `PI Decision`
+- `Email sent for PI Approval`
+- `Notification Recipient Names (from Project Space)`
+- `Notification Recipients (from Project Space)`
+
+The live request trigger should target records where `Source = User Form`.
+
 Recommended additions for clean automation behavior:
 
 - `Approval Status Label`
@@ -184,6 +197,15 @@ Recommended additions for clean automation behavior:
 - `Approval Link Sent At`
 - `Approval Expires At` (optional, future)
 - `Decision Source` (for audit, e.g. `biohpc-approve-page`)
+
+The following live fields have now been added to Airtable:
+
+- `Approval Token`
+- `Processed By`
+- `Processed At`
+- `Rejected Reason`
+- `Decision Source`
+- `Approval Link Sent At`
 
 If you want a single processed-state response regardless of approve or reject, `Processed By` and `Processed At` simplify automation logic.
 
