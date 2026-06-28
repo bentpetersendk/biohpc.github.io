@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BioHPC | Approval</title>
+    <meta
+      name="description"
+      content="Review and process BioHPC approval requests securely through the BioHPC approval workflow."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/approve.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="site-logo" href="index.html">BioHPC</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">Home</a>
+          <a href="getting-access.html">Getting Access</a>
+          <a href="project-spaces.html">Project Spaces</a>
+          <a href="documentation.html">Documentation</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="statistics.html">Statistics</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero approval-hero">
+        <div class="container approval-shell">
+          <div class="approval-intro">
+            <p class="eyebrow">BioHPC approval workflow</p>
+            <h1>Review request</h1>
+            <p class="lead">
+              This page lets Principal Investigators and Technical Contacts review a BioHPC approval
+              request without exposing Airtable credentials or record identifiers.
+            </p>
+          </div>
+
+          <section class="approval-card" aria-labelledby="approval-title">
+            <div class="approval-card-header">
+              <p class="approval-kicker">BioHPC</p>
+              <h2 id="approval-title">Loading approval request...</h2>
+              <p id="approval-subtitle" class="approval-subtitle">Retrieving request...</p>
+            </div>
+
+            <div
+              id="approval-feedback"
+              class="approval-feedback"
+              role="status"
+              aria-live="polite"
+            ></div>
+
+            <dl id="approval-details" class="approval-details" hidden></dl>
+
+            <div id="approval-actions" class="approval-actions" hidden>
+              <button id="approve-button" class="button" type="button">
+                <span class="button-label">Approve</span>
+                <span class="button-spinner" aria-hidden="true"></span>
+              </button>
+              <button id="reject-toggle-button" class="button secondary" type="button">
+                Reject
+              </button>
+            </div>
+
+            <form id="reject-form" class="reject-form" hidden>
+              <label for="reject-reason" class="reject-label">Reason for rejection (optional)</label>
+              <textarea
+                id="reject-reason"
+                name="reason"
+                rows="4"
+                maxlength="2000"
+                placeholder="Provide context if helpful for the requester or BioHPC administrators."
+              ></textarea>
+              <div class="approval-actions">
+                <button id="reject-button" class="button danger" type="submit">
+                  <span class="button-label">Reject request</span>
+                  <span class="button-spinner" aria-hidden="true"></span>
+                </button>
+                <button id="reject-cancel-button" class="button secondary" type="button">Cancel</button>
+              </div>
+            </form>
+
+            <div id="approval-retry" class="approval-retry" hidden>
+              <button id="retry-button" class="button secondary" type="button">Retry</button>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; <span data-current-year></span> BioHPC, University of Copenhagen. <a href="contact.html">Contact BioHPC</a>.</p>
+        <p>
+          BioHPC is a Department of Biology initiative at the University of Copenhagen and utilizes the
+          <a href="https://rubus.ku.dk/" target="_blank" rel="noopener noreferrer">Rubus HPC platform at the University of Copenhagen</a>.
+        </p>
+      </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="js/approve.js"></script>
+  </body>
+</html>
