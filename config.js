@@ -7,6 +7,30 @@ const siteConfig = {
     documentation: "https://rubus.ku.dk/",
     support: "mailto:biohpc@ku.dk"
   },
+  approvals: {
+    supportEmail: "biohpc@ku.dk",
+    requestTypes: {
+      membership: {
+        label: "Project Membership Request",
+        successVerb: "approved",
+        rejectionVerb: "rejected",
+        lookupPayloadType: "membership",
+        decisionPayloadType: "membership"
+      }
+    },
+    endpoints: {
+      lookup: "",
+      decision: ""
+    },
+    messages: {
+      invalidLink: "Invalid approval link.",
+      expiredLink: "This approval link has expired.",
+      requestUnavailable: "We could not retrieve this approval request right now.",
+      decisionUnavailable: "We could not submit your decision right now.",
+      processedPrefix: "This request has already been",
+      noFurtherAction: "No further action is required."
+    }
+  },
   contact: {
     email: "biohpc@ku.dk",
     emailHref: "mailto:biohpc@ku.dk",
