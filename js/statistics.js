@@ -21,7 +21,7 @@
       metrics: [
         { key: "users.registered", label: "Total Users Registered" },
         { key: "users.active", label: "Active Users" },
-        { key: "users.pending_requests", label: "User Account Requests in Progress" },
+        { key: "users.pending_requests", label: "User Access Requests in Progress" },
       ],
     },
     {

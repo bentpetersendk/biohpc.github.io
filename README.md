@@ -24,7 +24,6 @@ The website repository keeps the Airtable export script for maintainability, but
 
 Website statistics are calculated directly from the operational Airtable source tables:
 
-- `Users`
 - `PIs`
 - `Projects`
 - `Access Requests`
@@ -53,18 +52,16 @@ Optional repository variables can override the default Airtable `filterByFormula
 
 The defaults use the current BioHPC Airtable schema:
 
-- total users registered: `OR(LOWER({Account Status}) = "active", LOWER({Account Status}) = "inactive", LOWER({Account Status}) = "disabled", LOWER({Account Status}) = "suspended", LOWER({Account Status}) = "deactivated", LOWER({Account Status}) = "closed")`
-- active users: `LOWER({Account Status}) = "active"`
-- user access requests in progress: `OR(LOWER({Status}) = "pending pi approval", LOWER({Status}) = "approved - pending provisioning")` from the `Access Requests` table.
+- total users registered: `{Request Type} = "New User Access"` from the `Access Requests` table.
+- active users: `AND({Request Type} = "New User Access",{Status} = "Active")` from the `Access Requests` table.
+- user access requests in progress: `AND({Request Type} = "New User Access",NOT({Status} = "Active"))` from the `Access Requests` table.
 - registered PIs: all records in the `PIs` table.
 - active projects: `LOWER({Project Status}) = "active"`
 - ordered projects: `LOWER({Project Status}) = "ordered"`
 
-The public `users.registered` metric represents historical platform growth: users who have ever been approved and onboarded. The public `users.active` metric represents current BioHPC access. The public `users.pending_requests` metric represents user access requests currently waiting for PI approval or approved and waiting for provisioning. If new non-active onboarded user statuses are added in Airtable, include them by updating `AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA`.
+The public `users.registered` metric represents all Access Requests records where `Request Type` is `New User Access`. The public `users.active` metric represents New User Access records with `Status` set to `Active`. The public `users.pending_requests` metric represents New User Access records where `Status` is not `Active`. Project Membership Requests are not counted in user statistics.
 
 The public `pis.registered` metric represents all Principal Investigators registered in BioHPC.
-
-If no `AIRTABLE_PENDING_USER_REQUESTS_FORMULA` override is configured, the generator can fall back to counting matching `Status` values from fetched access request records if Airtable formula filtering returns zero records.
 
 ### Publishing Statistics
 

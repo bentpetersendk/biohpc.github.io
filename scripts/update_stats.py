@@ -37,21 +37,17 @@ class Metric:
     fallback_values: tuple[str, ...] = ()
 
 
-USER_TOTAL_REGISTERED_FORMULA = (
-    "OR("
-    'LOWER({Account Status}) = "active",'
-    'LOWER({Account Status}) = "inactive",'
-    'LOWER({Account Status}) = "disabled",'
-    'LOWER({Account Status}) = "suspended",'
-    'LOWER({Account Status}) = "deactivated",'
-    'LOWER({Account Status}) = "closed"'
+NEW_USER_ACCESS_FORMULA = '{Request Type} = "New User Access"'
+USER_ACTIVE_FORMULA = (
+    "AND("
+    f"{NEW_USER_ACCESS_FORMULA},"
+    '{Status} = "Active"'
     ")"
 )
-USER_ACTIVE_FORMULA = 'LOWER({Account Status}) = "active"'
 USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA = (
-    "OR("
-    'LOWER({Status}) = "pending pi approval",'
-    'LOWER({Status}) = "approved - pending provisioning"'
+    "AND("
+    f"{NEW_USER_ACCESS_FORMULA},"
+    'NOT({Status} = "Active")'
     ")"
 )
 
@@ -59,16 +55,16 @@ METRICS: tuple[Metric, ...] = (
     Metric(
         "users",
         "registered",
-        "Users",
-        None,
+        "Access Requests",
+        "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA",
-        USER_TOTAL_REGISTERED_FORMULA,
+        NEW_USER_ACCESS_FORMULA,
     ),
     Metric(
         "users",
         "active",
-        "Users",
-        None,
+        "Access Requests",
+        "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_ACTIVE_USERS_FORMULA",
         USER_ACTIVE_FORMULA,
     ),
@@ -79,8 +75,6 @@ METRICS: tuple[Metric, ...] = (
         "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_PENDING_USER_REQUESTS_FORMULA",
         USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA,
-        "Status",
-        ("Pending PI Approval", "Approved - Pending Provisioning"),
     ),
     Metric("pis", "registered", "PIs"),
     Metric("projects", "total", "Projects"),
