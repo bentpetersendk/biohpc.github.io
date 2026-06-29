@@ -52,14 +52,14 @@ Optional repository variables can override the default Airtable `filterByFormula
 
 The defaults use the current BioHPC Airtable schema:
 
-- total users registered: `{Request Type} = "New User Access"` from the `Access Requests` table.
-- active users: `AND({Request Type} = "New User Access",{Status} = "Active")` from the `Access Requests` table.
-- user access requests in progress: `AND({Request Type} = "New User Access",NOT({Status} = "Active"))` from the `Access Requests` table.
+- total users registered: `AND({Request Type} = "New User Access",{Approved Compute Queue} = "BioHPC_Normal",{Status} = "Active")` from the `Access Requests` table.
+- active users: `AND({Request Type} = "New User Access",{Approved Compute Queue} = "BioHPC_Normal",{Status} = "Active")` from the `Access Requests` table.
+- user access requests in progress: `AND({Request Type} = "New User Access",{Approved Compute Queue} = "BioHPC_Normal",{Status} = "Approved - Pending Provisioning")` from the `Access Requests` table.
 - registered PIs: all records in the `PIs` table.
 - active projects: `LOWER({Project Status}) = "active"`
 - ordered projects: `LOWER({Project Status}) = "ordered"`
 
-The public `users.registered` metric represents all Access Requests records where `Request Type` is `New User Access`. The public `users.active` metric represents New User Access records with `Status` set to `Active`. The public `users.pending_requests` metric represents New User Access records where `Status` is not `Active`. Project Membership Requests are not counted in user statistics.
+The public `users.registered` and `users.active` metrics represent New User Access records for the `BioHPC_Normal` queue with `Status` set to `Active`. The public `users.pending_requests` metric represents New User Access records for the `BioHPC_Normal` queue with `Status` set to `Approved - Pending Provisioning`. Hidden/archive workflow records, such as `Approved - hiding record`, and Project Membership Requests are not counted in user statistics.
 
 The public `pis.registered` metric represents all Principal Investigators registered in BioHPC.
 

@@ -38,16 +38,19 @@ class Metric:
 
 
 NEW_USER_ACCESS_FORMULA = '{Request Type} = "New User Access"'
-USER_ACTIVE_FORMULA = (
+USER_STATISTICS_QUEUE_FORMULA = '{Approved Compute Queue} = "BioHPC_Normal"'
+USER_ACTIVE_ACCESS_FORMULA = (
     "AND("
     f"{NEW_USER_ACCESS_FORMULA},"
+    f"{USER_STATISTICS_QUEUE_FORMULA},"
     '{Status} = "Active"'
     ")"
 )
 USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA = (
     "AND("
     f"{NEW_USER_ACCESS_FORMULA},"
-    'NOT({Status} = "Active")'
+    f"{USER_STATISTICS_QUEUE_FORMULA},"
+    '{Status} = "Approved - Pending Provisioning"'
     ")"
 )
 
@@ -58,7 +61,7 @@ METRICS: tuple[Metric, ...] = (
         "Access Requests",
         "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_TOTAL_USERS_REGISTERED_FORMULA",
-        NEW_USER_ACCESS_FORMULA,
+        USER_ACTIVE_ACCESS_FORMULA,
     ),
     Metric(
         "users",
@@ -66,7 +69,7 @@ METRICS: tuple[Metric, ...] = (
         "Access Requests",
         "AIRTABLE_ACCESS_REQUESTS_TABLE",
         "AIRTABLE_ACTIVE_USERS_FORMULA",
-        USER_ACTIVE_FORMULA,
+        USER_ACTIVE_ACCESS_FORMULA,
     ),
     Metric(
         "users",
