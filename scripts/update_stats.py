@@ -38,18 +38,15 @@ class Metric:
 
 
 NEW_USER_ACCESS_FORMULA = '{Request Type} = "New User Access"'
-USER_STATISTICS_QUEUE_FORMULA = '{Approved Compute Queue} = "BioHPC_Normal"'
 USER_ACTIVE_ACCESS_FORMULA = (
     "AND("
     f"{NEW_USER_ACCESS_FORMULA},"
-    f"{USER_STATISTICS_QUEUE_FORMULA},"
     '{Status} = "Active"'
     ")"
 )
 USER_ACCESS_REQUESTS_IN_PROGRESS_FORMULA = (
     "AND("
     f"{NEW_USER_ACCESS_FORMULA},"
-    f"{USER_STATISTICS_QUEUE_FORMULA},"
     '{Status} = "Approved - Pending Provisioning"'
     ")"
 )
