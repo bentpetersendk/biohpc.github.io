@@ -4,6 +4,7 @@ const siteConfig = {
     piRegistrationForm: "https://airtable.com/appQsnn57Oi8vNAWD/pag2HvrNw52AfY3q9/form",
     projectSpaceRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagKILRMZ6p0ek9Vc/form",
     userRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagW96PfyUrhBkk49/form",
+    projectMembershipRequestForm: "https://airtable.com/appQsnn57Oi8vNAWD/pagLehE3XS1JPTLKa/form",
     documentation: "https://rubus.ku.dk/",
     support: "mailto:biohpc@ku.dk"
   },
